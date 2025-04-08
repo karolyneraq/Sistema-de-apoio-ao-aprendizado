@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>EduVox - Landing Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f7f6;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 15px 40px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #3498db;
+    }
+    .menu a {
+      margin-left: 20px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .menu a:hover {
+      color: #3498db;
+    }
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 20px;
+    }
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .hero p {
+      font-size: 18px;
+      color: #666;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+    .hero button {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .hero button:hover {
+      background: #2980b9;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+    }
+    @media (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .menu {
+        margin-top: 10px;
+      }
+      .menu a {
+        margin-left: 0;
+        margin-right: 10px;
+      }
+      .hero h1 {
+        font-size: 28px;
+      }
+      .hero p {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">EduVox</div>
+    <div class="menu">
+      <a href="/funcionalidades">Funcionalidades</a>
+      <a href="/faq">FAQ</a>
+      <a href="/preco">Preço</a>
+      <a href="/app">Acessar</a>
+      <a href="#cadastro">Cadastre-se já</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Revolucione seus estudos com transcrições e resumos automatizados</h1>
+    <p>Revise aulas e palestras com anotações precisas e resumos inteligentes para facilitar seu aprendizado.</p>
+    <button onclick="location.href='/app'">Acessar</button>
+  </section>
+
+  <footer>
+    &copy; 2025 EduVox. Todos os direitos reservados.
+  </footer>
+</body>
+</html>

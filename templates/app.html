@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>EduVox - Transcrição e Resumos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body { 
+      font-family: 'Roboto', sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background: #f4f7f6; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+    }
+    .container { 
+      background: #fff; 
+      padding: 30px; 
+      border-radius: 8px; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+      width: 90%; 
+      max-width: 600px; 
+      margin: 20px;
+    }
+    h1 { 
+      text-align: center; 
+      margin-bottom: 20px; 
+      color: #333;
+      font-size: 24px;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .section label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #555;
+    }
+    .section input[type="text"],
+    .section textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    button {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+      margin-right: 10px;
+    }
+    button:disabled {
+      background: #95a5a6;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
+      background: #2980b9;
+    }
+    .btn-group {
+      text-align: center;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #status {
+      text-align: center;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    #progressBar {
+      width: 100%;
+      background: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      display: none;
+    }
+    #progressBar div {
+      height: 10px;
+      width: 0;
+      background: #3498db;
+      transition: width 0.3s;
+    }
+    #transcricaoText {
+      white-space: pre-wrap; 
+      background: #f9f9f9; 
+      padding: 10px; 
+      border-radius: 4px;
+    }
+    .back-link-fixo {
+      position: fixed;   
+      bottom: 10px;      
+      left: 10px;        
+      text-decoration: none;
+      color: #3498db;
+      font-weight: 500;
+      background-color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+    .back-link-fixo:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .btn-group {
+        flex-direction: column;
+        gap: 10px;
+      }
+      button { width: 100%; }
+      h1 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>EduVox - Transcrição e Resumos de Aulas</h1>
+    <p style="text-align: center;">Envie o áudio ou vídeo da aula/palestra para gerar transcrições, resumos e extração de tópicos.</p>
+    
+    <div class="btn-group">
+      <button id="btnStart">Iniciar Gravação</button>
+      <button id="btnStop" disabled>Parar Gravação</button>
+    </div>
+    
+    <div class="section">
+      <h2 style="font-size: 16px; margin-bottom: 10px;">Enviar Áudio/Vídeo</h2>
+      <input type="file" id="audioFile" accept="audio/*, video/*">
+      <button id="btnUpload">Enviar Arquivo</button>
+    </div>
+
+    <div id="progressBar"><div></div></div>
+    <div id="status"></div>
+
+    <!-- Seção de transcrição -->
+    <div id="transcricao" class="section" style="display:none;">
+      <h2 style="font-size: 16px; margin-bottom: 10px;">Transcrição</h2>
+      <p id="transcricaoText"></p>
+    </div>
+
+    <!-- Seção de edição dos dados -->
+    <div id="edicao" class="section" style="display:none;">
+      <h2 style="font-size: 16px; margin-bottom: 10px;">Revisão e Anotações</h2>
+      <form id="editForm">
+        <label>Título da Aula:</label>
+        <input type="text" id="titulo_aula" />
+
+        <label>Nome do Professor:</label>
+        <input type="text" id="nome_professor" />
+
+        <label>Tópicos Abordados:</label>
+        <textarea id="topicos" rows="2"></textarea>
+
+        <label>Resumo da Aula:</label>
+        <textarea id="resumo" rows="2"></textarea>
+
+        <label>Notas Importantes:</label>
+        <textarea id="notas" rows="2"></textarea>
+
+        <div style="text-align: center; margin-top: 10px;">
+          <button type="button" id="btnExportar">Exportar e Salvar PDF</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Seção para consulta no banco de dados -->
+    <div id="consulta" class="section">
+      <h2 style="font-size: 16px; margin-bottom: 10px;">Consultar Aulas</h2>
+      <input type="text" id="consulta_titulo" placeholder="Digite o título da aula">
+      <button type="button" id="btnConsultar">Consultar</button>
+      <div id="resultadoConsulta" style="margin-top: 10px;"></div>
+    </div>
+  </div>
+  <!-- Link fixo no canto inferior esquerdo -->
+  <a href="/" class="back-link-fixo">Voltar à Página Inicial</a>
+  <script>
+    let mediaRecorder;
+    let audioChunks = [];
+    const btnStart = document.getElementById("btnStart");
+    const btnStop = document.getElementById("btnStop");
+    const btnUpload = document.getElementById("btnUpload");
+    const audioFileInput = document.getElementById("audioFile");
+    const statusEl = document.getElementById("status");
+    const progressBar = document.getElementById("progressBar");
+    const progressDiv = progressBar.querySelector("div");
+    const transcricaoEl = document.getElementById("transcricao");
+    const transcricaoTextEl = document.getElementById("transcricaoText");
+
+    // Inicia gravação de áudio
+    btnStart.addEventListener("click", async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        mediaRecorder.addEventListener("dataavailable", event => {
+          audioChunks.push(event.data);
+        });
+        mediaRecorder.addEventListener("stop", async () => {
+          const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+          const formData = new FormData();
+          formData.append("file", audioBlob, "gravacao.wav");
+          await enviarAudio(formData);
+        });
+        mediaRecorder.start();
+        btnStart.disabled = true;
+        btnStop.disabled = false;
+        statusEl.textContent = "Gravando...";
+        progressBar.style.display = "block";
+        progressDiv.style.width = "0%";
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = "Erro ao acessar o microfone.";
+      }
+    });
+
+    // Para gravação de áudio
+    btnStop.addEventListener("click", () => {
+      mediaRecorder.stop();
+      btnStart.disabled = false;
+      btnStop.disabled = true;
+      statusEl.textContent = "Gravação parada. Processando...";
+    });
+
+    // Envio de arquivo de áudio/vídeo
+    btnUpload.addEventListener("click", async () => {
+      const files = audioFileInput.files;
+      if (!files || files.length === 0) {
+        statusEl.textContent = "Selecione um arquivo primeiro.";
+        return;
+      }
+      const formData = new FormData();
+      formData.append("file", files[0], files[0].name);
+      statusEl.textContent = "Enviando arquivo para o servidor...";
+      await enviarAudio(formData);
+    });
+
+    async function enviarAudio(formData) {
+      try {
+        const response = await fetch("/transcrever", {
+          method: "POST",
+          body: formData
+        });
+        const data = await response.json();
+        statusEl.textContent = "Processamento concluído!";
+        transcricaoEl.style.display = "block";
+        transcricaoTextEl.textContent = data.transcricao.trim();
+
+        // Preenche os campos com os dados extraídos
+        if (data.dados) {
+          document.getElementById("titulo_aula").value = data.dados.titulo || "";
+          document.getElementById("nome_professor").value = data.dados.professor || "";
+          document.getElementById("topicos").value = data.dados.topicos || "";
+          document.getElementById("resumo").value = data.dados.resumo || "";
+          document.getElementById("notas").value = data.dados.notas || "";
+        }
+      } catch (error) {
+        console.error(error);
+        statusEl.textContent = "Erro ao enviar arquivo para o servidor.";
+      } finally {
+        progressBar.style.display = "none";
+      }
+    }
+
+    // Exporta dados e salva PDF
+    document.getElementById("btnExportar").addEventListener("click", async () => {
+      statusEl.textContent = "Exportando e salvando PDF...";
+      const dados = {
+        titulo: document.getElementById("titulo_aula").value,
+        professor: document.getElementById("nome_professor").value,
+        topicos: document.getElementById("topicos").value,
+        resumo: document.getElementById("resumo").value,
+        notas: document.getElementById("notas").value
+      };
+      try {
+        const exportResponse = await fetch("/exportar", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dados)
+        });
+        const exportData = await exportResponse.json();
+        if (exportResponse.ok) {
+          statusEl.textContent = exportData.mensagem || "PDF gerado com sucesso!";
+          alert("PDF gerado em: " + exportData.pdf_gerado);
+        } else {
+          statusEl.textContent = "Erro na exportação: " + exportData.erro;
+        }
+      } catch (error) {
+        console.error(error);
+        statusEl.textContent = "Erro ao exportar PDF.";
+      }
+    });
+
+    // Consulta aulas no banco de dados
+    document.getElementById("btnConsultar").addEventListener("click", async () => {
+      const titulo = document.getElementById("consulta_titulo").value;
+      if (!titulo) {
+        statusEl.textContent = "Por favor, insira o título da aula para consulta.";
+        return;
+      }
+      try {
+        const response = await fetch(`/consultar?titulo=${encodeURIComponent(titulo)}`);
+        const result = await response.json();
+        const resultadoDiv = document.getElementById("resultadoConsulta");
+        resultadoDiv.innerHTML = "";
+        if (response.ok) {
+          if (result.aulas && result.aulas.length > 0) {
+            let html = `<h3 style="margin-bottom: 10px;">Resultados da consulta:</h3>`;
+            result.aulas.forEach(aula => {
+              html += `
+                <div style="background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 15px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+                  <p><strong>ID:</strong> ${aula.id}</p>
+                  <p><strong>Título:</strong> ${aula.titulo}</p>
+                  <p><strong>Professor:</strong> ${aula.professor}</p>
+                  <p><strong>Tópicos:</strong> ${aula.topicos}</p>
+                  <p><strong>Resumo:</strong> ${aula.resumo}</p>
+                  <p><strong>Notas:</strong> ${aula.notas}</p>
+                  <p><strong>Data de Criação:</strong> ${aula.data_criacao}</p>
+                </div>
+              `;
+            });
+            resultadoDiv.innerHTML = html;
+          } else {
+            resultadoDiv.innerHTML = `<div style="background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 15px;">Nenhuma aula encontrada.</div>`;
+          }
+        } else {
+          resultadoDiv.innerHTML = `<div style="background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 15px;">${result.mensagem || "Nenhuma aula encontrada."}</div>`;
+        }
+      } catch (error) {
+        console.error(error);
+        statusEl.textContent = "Erro ao consultar aula.";
+      }
+    });
+  </script>
+</body>
+</html>
