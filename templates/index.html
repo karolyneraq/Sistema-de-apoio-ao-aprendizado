@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcrição de Áudio com IA</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1 class="project-title">Manuscribe AI</h1>
+    </header>
+
+    <div class="container">
+        <h2>Enviar Áudio para Transcrição</h2>
+        
+        <div class="upload-form">
+            <form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" name="file" accept="audio/*" required>
+                <button type="submit">Enviar Áudio</button>
+            </form>
+        </div>
+
+        <div class="result-container">
+            <h2>Resultado</h2>
+            <div id="resultado"></div>
+        </div>
+    </div>
+
+    <script>
+    const form = document.getElementById("uploadForm");
+    const resultado = document.getElementById("resultado");
+
+    form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        resultado.innerHTML = '<div class="loading">Processando... Aguarde</div>';
+        
+        try {
+            const formData = new FormData(form);
+            const file = formData.get("file");
+            
+            if (!file || file.size === 0) {
+                throw new Error("Por favor, selecione um arquivo de áudio.");
+            }
+
+            const response = await fetch("/transcrever", {
+                method: "POST",
+                body: formData
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.erro || "Erro no servidor");
+            }
+
+            const data = await response.json();
+            
+            resultado.innerHTML = `
+                <div class="result-box">
+                    <strong>🔊 TRANSCRIÇÃO:</strong>
+                    <details>
+                        <summary style="cursor: pointer; font-weight: bold;">Mostrar/Esconder Transcrição</summary>
+                        <div style="margin-top: 10px; white-space: pre-line;">
+                            ${data.transcricao || "Nenhuma transcrição disponível"}
+                        </div>
+                    </details>
+
+                    <div style="margin-top: 30px;">
+                        <strong>📚 RESUMO:</strong>
+                        ${data.resumo || "Não foi possível gerar o resumo"}
+                    </div>
+                </div>
+            `;
+                
+        } catch (error) {
+            resultado.innerHTML = `<div class="error">Erro: ${error.message}</div>`;
+            console.error("Erro:", error);
+        }
+    });
+    </script>
+</body>
+</html>

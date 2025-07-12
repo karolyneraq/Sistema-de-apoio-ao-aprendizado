@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.nav-item{
+    font-size: 18px;
+    font-weight: 500;
+    font-family: "Lexend", sans-serif;
+}
+
+.nav-underline {
+    gap: 30px;
+    justify-content: center;
+}
+
+.nav-underline .nav-item {
+    margin-right: 40px;
+}
+
+.nav-underline .nav-link {
+    color: #b6b6b6;
+    padding-bottom: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.nav-underline .nav-link.active {
+    color: #0080A7;
+    border-bottom: 4px solid #FF5254;
+    font-weight: 700;
+}
+
+.nav-underline .nav-link:hover {
+    color: #0080A7;
+}

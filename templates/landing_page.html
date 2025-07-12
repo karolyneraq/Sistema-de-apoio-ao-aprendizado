@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Início - Manuscribe AI{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', path='landing_page_style.css') }}?v=20250711">
+{% endblock %}
+
+{% block content %}
+    <div class="first-page">
+
+        <div class="top-content">
+
+            <img src="static/Manuscribe AI.png" class="page-icon" alt="Icone Manuscribe AI">
+            
+            <div class="first-page-left-container">
+
+                <div class="title">
+                    <h1>Manuscribe AI</h1>
+                </div>
+                <div class="content">
+                    <h2>Permita que a IA anote as suas aulas por você</h2>
+                    
+                    <div class="description">
+                        <p>Uma plataforma educacional que transforma gravações de aula em resumos<br> claros e organizados. Ideal para estudantes com limitações motoras finas.</p>
+                    </div>
+                    
+                    <a href="/app" class="btn-init-app">EXPERIMENTE AGORA</a>
+
+                </div>
+
+            </div>
+        
+        </div>
+
+        <div class="flashcard-section">
+            <div class="title-flashcard-section">
+                <h1>Por que criamos o Manuscribe AI?</h1>
+            </div>
+                    <div class="d-flex justify-content-center align-items-center vh-900">
+                        <div class="card-flip">
+                            <div class="card-inner">
+                            <div class="card-front">
+                                <img src="static/assets/desafio.svg" class="img-fluid" alt="Desafio">
+                            </div>
+                            <div class="card-back">
+                                <img src="static/assets/solução.svg" class="img-fluid" alt="Solução">
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+        <div class="how-works-section">
+            <h2>Como ele funciona?</h2>
+
+            <div class="boxes">
+                <div class="audio-capture">
+                    <h3>1. Grave a aula</h3>
+                    <img src="static/assets/microfone.svg" class="img-fluid" alt="Gravação">
+                    <p>Capture o áudio da aula com seu celular, gravador ou diretamente pela plataforma.</p>
+                </div>
+
+                <div class="upload-audio">
+                    <h3>2. Envie o áudio</h3>
+                    <img src="static/assets/upload file.svg" class="img-fluid" alt="Upload áudio">
+                    <p>Faça o upload do arquivo ou grave dentro do sistema.</p>
+                </div>
+
+                <div class="result">
+                    <h3>3. Receba as anotações automatizadas</h3>
+                    <img src="static/assets/AI.svg" class="img-fluid" alt="AI">
+                    <p>A IA processa o conteúdo e gera um resumo pronto para revisão e estudo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

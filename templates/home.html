@@ -1,118 +1,126 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>EduVox - Landing Page</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #f4f7f6;
-    }
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-      padding: 15px 40px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .logo {
-      font-size: 20px;
-      font-weight: bold;
-      color: #3498db;
-    }
-    .menu a {
-      margin-left: 20px;
-      text-decoration: none;
-      color: #333;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    .menu a:hover {
-      color: #3498db;
-    }
-    .hero {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 100px 20px;
-    }
-    .hero h1 {
-      font-size: 36px;
-      margin-bottom: 20px;
-      color: #333;
-    }
-    .hero p {
-      font-size: 18px;
-      color: #666;
-      max-width: 600px;
-      margin-bottom: 40px;
-    }
-    .hero button {
-      background: #3498db;
-      color: #fff;
-      border: none;
-      padding: 15px 30px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s;
-    }
-    .hero button:hover {
-      background: #2980b9;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #999;
-    }
-    @media (max-width: 768px) {
-      nav {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .menu {
-        margin-top: 10px;
-      }
-      .menu a {
-        margin-left: 0;
-        margin-right: 10px;
-      }
-      .hero h1 {
-        font-size: 28px;
-      }
-      .hero p {
-        font-size: 16px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <nav>
-    <div class="logo">EduVox</div>
-    <div class="menu">
-      <a href="/funcionalidades">Funcionalidades</a>
-      <a href="/faq">FAQ</a>
-      <a href="/preco">Preço</a>
-      <a href="/app">Acessar</a>
-      <a href="#cadastro">Cadastre-se já</a>
+<!-- templates/home.html -->
+{% extends "layout.html" %}
+
+{% block head_extra %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', path='home.css') }}">
+{% endblock %}
+
+{% block title %}Início - Manuscribe AI{% endblock %}
+
+{% block content_inside %}
+<div class="home-page">
+    <h1>Bem-vindo ao Manuscribe AI!</h1>
+    <h2>Comece gravando a aula ou faça o upload da gravação.</h2>
+
+    <div class="boxes">
+        <button class="audio-capture" id="start-recording">
+            <h3>Toque aqui para gravar a aula</h3>
+            <img src="/static/assets/microfone.svg" class="img-fluid" alt="Gravação">
+        </button>
+
+        <label for="audio-upload" class="upload-audio" style="cursor:pointer;">
+            <h3>Envie aqui o áudio</h3>
+            <img src="/static/assets/upload file.svg" class="img-fluid" alt="Upload áudio">
+        </label>
+        <input type="file" id="audio-upload" accept="audio/*" style="display:none;">
     </div>
-  </nav>
 
-  <section class="hero">
-    <h1>Revolucione seus estudos com transcrições e resumos automatizados</h1>
-    <p>Revise aulas e palestras com anotações precisas e resumos inteligentes para facilitar seu aprendizado.</p>
-    <button onclick="location.href='/app'">Acessar</button>
-  </section>
 
-  <footer>
-    &copy; 2025 EduVox. Todos os direitos reservados.
-  </footer>
-</body>
-</html>
+    <form id="uploadForm" style="display: none;">
+        <input type="file" name="file" id="fileInput" accept="audio/*">
+    </form>
+
+    <!-- Modal Bootstrap -->
+    <div class="modal fade" id="modalTranscricao" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Resultado da Transcrição</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body" id="resultado-transcricao">
+            Processando...
+        </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<script>
+const inputUpload = document.getElementById("audio-upload");
+const startRecordingBtn = document.getElementById("start-recording");
+const resultado = document.getElementById("resultado-transcricao");
+const modalBootstrap = new bootstrap.Modal(document.getElementById('modalTranscricao'));
+
+// Upload manual
+inputUpload.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    await enviarParaTranscricao(file);
+});
+
+// Gravação simples (10s automáticos)
+let mediaRecorder;
+let chunks = [];
+
+startRecordingBtn.addEventListener("click", async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    chunks = [];
+
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        const file = new File([blob], "gravacao.webm", { type: 'audio/webm' });
+        await enviarParaTranscricao(file);
+    };
+
+    mediaRecorder.start();
+    setTimeout(() => {
+        mediaRecorder.stop();
+        stream.getTracks().forEach(track => track.stop());
+    }, 10000); // grava 10s
+});
+
+// Função de envio
+async function enviarParaTranscricao(file) {
+    resultado.innerHTML = "Processando... Aguarde";
+    modalBootstrap.show();
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const response = await fetch("/transcrever", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        resultado.innerHTML = `
+            <div class="result-box">
+                <strong>🔊 TRANSCRIÇÃO:</strong>
+                <details>
+                    <summary style="cursor: pointer; font-weight: bold;">Mostrar/Esconder Transcrição</summary>
+                    <div style="margin-top: 10px; white-space: pre-line;">
+                        ${data.transcricao || "Nenhuma transcrição disponível"}
+                    </div>
+                </details>
+
+                <div style="margin-top: 30px;">
+                    <strong>📚 RESUMO:</strong>
+                    ${data.resumo || "Não foi possível gerar o resumo"}
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        resultado.innerHTML = `<div class="text-danger">Erro: ${error.message}</div>`;
+    }
+}
+</script>
+
+{% endblock %}

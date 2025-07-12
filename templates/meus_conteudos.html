@@ -1,0 +1,14 @@
+<!-- templates/home.html -->
+{% extends "layout.html" %}
+
+{% block head_extra %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', path='home.css') }}">
+{% endblock %}
+{% block title %}Início - Manuscribe AI{% endblock %}
+
+{% block content_inside %}
+<h2>Seus conteúdos</h2>
+<p>Aqui estarão listados seus áudios transcritos, resumos, etc.</p>
+
+{% endblock %}

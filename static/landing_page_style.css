@@ -1,0 +1,218 @@
+*{
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+}
+
+.first-page{
+    font-family: "Poppins", sans-serif;
+}
+
+.page-icon{
+    width: 600px;
+    height: 500px;
+}
+
+.top-content{
+    width: 100%;
+    height: 100vh;
+    padding: 50px 50px 50px 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5CACC4;
+}
+
+.first-page-left-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: stretch;
+}
+
+.title{
+    width: 100%;
+    padding: 0px 0px 70px 0;
+    color: white;
+}
+
+.title h1 {
+    font-size: 70px;
+    font-weight: 800;
+    text-align: right;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items:flex-end;
+}
+
+.content h2{
+    color:#FFCC00;
+    font-size: 25px;
+    font-weight: 700;
+    padding-bottom: 15px;
+    text-align: right;
+}
+
+.content p{
+    font-size: 13px;
+    text-align: center;
+    color: white;
+    text-align: right;
+}
+
+.content .description{
+    padding-top: 10px;
+    padding-bottom: 50px;
+}
+
+.btn-init-app {
+    background-color: #FF5254;
+    color: white;
+    padding: 15px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+.btn-init-app:hover {
+    background-color: #e64648;     /* tom mais escuro */
+    color: white;
+    transform: scale(1.05);        /* leve aumento */
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.title-flashcard-section{
+    width: 100%;
+    padding-bottom: 20px;
+    padding-top: 40px;
+}
+
+.title-flashcard-section h1{
+    text-align: center;
+    font-weight: 700;
+    font-size: 40px;
+}
+
+
+.flashcard-section{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 0px;
+}
+
+.card-flip {
+    perspective: 2000px;
+    width: 1200px;
+    height: 450px;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.card-flip:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-front img, .card-back img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+}
+
+.how-works-section{
+    background-color: #5CACC4;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.how-works-section h2{
+    color: white;
+    font-weight: 700;
+    font-size: 40px;
+}
+
+.img-fluid{
+    width: 100px;
+    height: 100px;
+}
+
+.boxes {
+    display: flex;
+    justify-content: center;  /* centraliza horizontalmente */
+    align-items: flex-start;
+    gap: 80px;                 /* espaçamento de 20px entre os boxes */
+    flex-wrap: wrap;          /* permite quebrar em linha se faltar espaço */
+    padding-top: 100px;
+}
+
+.boxes h3{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.boxes p{
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.audio-capture, .upload-audio, .result {
+    width: 300px;
+    height: 350px;
+    padding: 50px 10px 10px 10px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.audio-capture{
+    background-color: #FF5254;
+}
+
+.upload-audio{
+    background-color: #72BCA5;
+}
+
+.result{
+    background-color: #FFCC00;
+}
+

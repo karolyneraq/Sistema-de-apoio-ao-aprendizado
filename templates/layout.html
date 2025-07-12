@@ -1,0 +1,23 @@
+<!-- templates/layout.html -->
+{% extends "base.html" %}
+
+{% block head_extra %}
+
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Playwrite+VN+Guides&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', path='layout_style.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <ul class="nav nav-underline mb-4 justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link {% if request.url.path == '/app' %}active{% endif %}" href="{{ url_for('app_home') }}">Início</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.url.path == '/meus_conteudos' %}active{% endif %}" href="{{ url_for('meus_conteudos') }}">Meus conteúdos</a>
+        </li>
+    </ul>
+
+    {% block content_inside %}{% endblock %}
+</div>
+{% endblock %}
